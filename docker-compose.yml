@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  api:
+    build: ./app
+    command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+    depends_on:
+      - postgres
+    networks:
+      - frontend
+      - backend
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - "8005:8005"
+    expose:
+      - "8005"
+    environment:
+      DATABASE_URL: postgres://shopping_list:e2ece938d65ed96f25c5ba2edea0b1ede3b29a9e2831206948c91801a7207289@postgres/shopping_list
+  postgres:
+    image: postgres:9.6.2-alpine
+    environment:
+      POSTGRES_USER: shopping_list
+      POSTGRES_DB: shopping_list
+      POSTGRES_PASSWORD: e2ece938d65ed96f25c5ba2edea0b1ede3b29a9e2831206948c91801a7207289
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data/
+    networks:
+      - backend
+
+networks:
+  frontend:
+  backend:
