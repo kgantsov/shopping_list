@@ -15,6 +15,10 @@ class ShoppingListSchema(BaseModel):
     description: str = None
 
 
+class ShoppingListsSchema(BaseModel):
+    objects: List[ShoppingListSchema]
+
+
 class ShoppingItemSchema(BaseModel):
     id: int = 0
     name: str

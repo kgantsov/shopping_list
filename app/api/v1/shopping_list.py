@@ -8,6 +8,7 @@ from app.auth import get_current_active_user
 from app.models.auth import UserModel
 
 from app.schemas.shopping_list import ShoppingListSchema
+from app.schemas.shopping_list import ShoppingListsSchema
 from app.schemas.shopping_list import ShoppingItemSchema
 from app.schemas.shopping_list import ShoppingItemsSchema
 from app.models.shopping_list import ShoppingListModel
@@ -15,6 +16,22 @@ from app.models.shopping_list import ShoppingItemModel
 
 
 router = APIRouter()
+
+
+@router.get("/lists/", response_model=ShoppingListsSchema)
+async def get_shopping_list(user: UserModel = Depends(get_current_active_user)):
+    shopping_lists = await ShoppingListModel.query.where(
+        db.and_(
+            ShoppingListModel.user_id == user.id,
+        )
+    ).limit(200).gino.all()
+
+    if not shopping_lists:
+        raise HTTPException(status_code=404, detail="Shopping list not found")
+
+    return ShoppingListsSchema.parse_obj({
+        'objects': [x.to_dict() for x in shopping_lists]
+    })
 
 
 @router.post("/lists/", response_model=ShoppingListSchema)
