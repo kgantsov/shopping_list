@@ -3,5 +3,5 @@ email-validator==1.0.5
 fastapi==0.65.2
 gino==0.8.3
 PyJWT==1.7.1
-uvicorn==0.10.3
+uvicorn==0.11.7
 passlib==1.7.1
